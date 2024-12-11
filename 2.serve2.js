@@ -23,7 +23,7 @@ const menurouter =require('./routes/menuroute');
 //use the menu routers
 app.use('/menu',menurouter);
 
-
+// comment added chll nikal abb 
 app.listen(2000,()=>{
     console.log("server bangya");
 });
