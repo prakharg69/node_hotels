@@ -1,9 +1,12 @@
 const mongoose =require('mongoose');
+require('dotenv').config();
 
 // define the mongodb connection URL
-const mongoURL='mongodb://127.0.0.1:27017/hostel'
+// const mongoURL='mongodb+srv://Prakharbackend:Vijaya1171@cluster0.yvh66.mongodb.net/';
+const mongoURL =process.env.DB_URL;
 
 mongoose.connect(mongoURL);
+
 
 // get the default connection 
 // Mongoose maintains a default connection object representing the mongoDB connection 

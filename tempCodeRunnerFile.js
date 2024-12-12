@@ -1,1 +1,1 @@
-const person =require('./modules/person');
+require('dotenv').config();
