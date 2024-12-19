@@ -6,10 +6,19 @@ const menu = require('./modules/menu');
 require('dotenv').config();
 
 
- const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 
+// middleware function 
+const logrequest =(req,res,next)=>{
+    console.log(`${new Date().toLocaleString()} Request made to :${req.originalUrl}`)
+    next(); // move on the next phase   
+}
+app.use(logrequest);
+app.get('/',function(req,res){
+    res.send('welcome to our hotel');
+})
 
 // import the router files
 const personrouter = require('./routes/personroutes');
@@ -23,11 +32,10 @@ const menurouter =require('./routes/menuroute');
 //use the menu routers
 app.use('/menu',menurouter);
 
-const PORT =process.env.PORT || 2000;
+// const PORT =process.env.PORT || 2000;
 
- 
 // comment added chll nikal abb 
 
-app.listen(PORT,()=>{
+app.listen(2000,()=>{
     console.log("server bangya");
-});
+}); 
