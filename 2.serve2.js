@@ -4,6 +4,7 @@ const db = require('./db');
 const person =require('./modules/person');
 const menu = require('./modules/menu');
 require('dotenv').config();
+const passport = require('./auth');
 
 
 const bodyParser = require('body-parser');
@@ -16,9 +17,17 @@ const logrequest =(req,res,next)=>{
     next(); // move on the next phase   
 }
 app.use(logrequest);
-app.get('/',function(req,res){
-    res.send('welcome to our hotel');
-})
+
+
+
+app.use(passport.initialize());
+
+const localAuthMiddleware = passport.authenticate('local', { session: false});
+
+app.get('/',localAuthMiddleware,(req, res) => {
+        res.send('welcome to our hotel');
+    }
+);
 
 // import the router files
 const personrouter = require('./routes/personroutes');
