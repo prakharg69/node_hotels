@@ -11,12 +11,12 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 
-// middleware function 
-const logrequest =(req,res,next)=>{
-    console.log(`${new Date().toLocaleString()} Request made to :${req.originalUrl}`)
-    next(); // move on the next phase   
-}
-app.use(logrequest);
+// // middleware function 
+// const logrequest =(req,res,next)=>{
+//     console.log(`${new Date().toLocaleString()} Request made to :${req.originalUrl}`)
+//     next(); // move on the next phase   
+// }
+// app.use(logrequest);
 
 
 

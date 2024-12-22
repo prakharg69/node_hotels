@@ -1,9 +1,9 @@
 const express=require('express');
 const router =express.Router();
 const person =require('./../modules/person');
+const {jwtAuthMiddleware ,generateToken} = require('../jwt');
 
-
-router.post('/',async(req,res)=>{
+router.post('/signup',async(req,res)=>{
     try{
         const data = req.body // Assuming the request body contains the person data 
         
@@ -11,9 +11,17 @@ router.post('/',async(req,res)=>{
         const newPerson =new person(data);
 
         // save the new person to the database
-        const savee =await newPerson.save();
+        const response =await newPerson.save();
         console.log('data saved');
-        res.status(200).json(savee);
+        const payload={
+            id: response.id,
+            username: response.username
+        }
+        console.log(JSON.stringify(payload));
+        const token =generateToken(payload);
+        console.log('token is : ',token);
+        
+        res.status(200).json({response: response,token: token});
     }
     catch(err){
         console.log(err);
@@ -21,8 +29,36 @@ router.post('/',async(req,res)=>{
         
     }
 })
+// login router
 
-router.get('/',async(req,res)=>{
+router.post('/login',async(req,res)=>{
+    try{
+        // extract username and password from request body     
+        const {username,password} =req.body;
+        // find the user by username
+        const user = await person.findOne({username:username});
+        
+        //if user does exist or password does not match , return error 
+        if(!user || !(await user.comparePassword(password))){
+            return res.status(401).json({error: "Invalid username or password"});
+        }
+         // generate token 
+        const payload ={
+            id: user.id,
+            username: user.username
+        }
+        const token= generateToken(payload);
+
+        // return token as responed 
+        res.json({token: token});
+    }
+    catch(err){
+            console.log(err);
+            res.status(500).json({error: 'Internal server error'});
+    }
+})
+
+router.get('/',jwtAuthMiddleware,async(req,res)=>{
     try{
         const data = await person.find();
         console.log('data fetched');
